@@ -331,35 +331,40 @@ img {
 }
 
 .navbar-logo {
-  width: 44px;
-  height: 44px;
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px;
   border-radius: 50%;
-  object-fit: cover;
+  object-fit: cover !important;
+  flex-shrink: 0;
   border: 2px solid var(--accent);
-  box-shadow: 0 0 0 3px rgba(229, 157, 44, 0.2);
+  box-shadow: 0 0 0 3px rgba(229, 157, 44, 0.25);
 }
 
 .logo-text {
   display: flex;
   flex-direction: column;
-  line-height: 1.2;
+  line-height: 1.25;
+  min-width: 0;
 }
 
 .logo-name {
   font-family: var(--font-heading);
-  font-size: 1.35rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: white;
   letter-spacing: 0.01em;
+  white-space: nowrap;
 }
 
 .logo-tagline {
   font-family: var(--font-body);
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 400;
   color: var(--accent);
-  letter-spacing: 0.04em;
-  opacity: 0.95;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  opacity: 0.9;
 }
 
 .nav-links {
