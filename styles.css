@@ -330,6 +330,38 @@ img {
   letter-spacing: 0.02em;
 }
 
+.navbar-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 0 3px rgba(229, 157, 44, 0.2);
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.logo-name {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 0.01em;
+}
+
+.logo-tagline {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+  opacity: 0.95;
+}
+
 .nav-links {
   display: flex;
   gap: 2.5rem;
