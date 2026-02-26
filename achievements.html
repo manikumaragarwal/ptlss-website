@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Achievements - Pt. Laxmi Shanker Saraswati Inter College</title>
+    <meta name="description"
+        content="Celebrating 500+ awards, 20+ years of excellence, and countless milestones at Pt. Laxmi Shanker Saraswati Inter College.">
+    <link rel="stylesheet" href="styles.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* ── Achievements-specific styles ── */
+
+        /* Stats Strip */
+        .stats-strip {
+            background-color: var(--primary);
+            padding: 4rem 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            color: white;
+        }
+
+        .stat-number {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent);
+            display: block;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.85;
+            letter-spacing: 0.04em;
+        }
+
+        /* Accent divider */
+        .section-divider {
+            width: 60px;
+            height: 4px;
+            background: var(--accent);
+            margin: 0 auto 2rem;
+            border-radius: 2px;
+        }
+
+        /* Achievement gallery items — extend base .gallery-item */
+        .gallery-item {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .achievement-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(46, 67, 101, 0.88) 0%, transparent 55%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.25rem;
+            opacity: 0;
+            transition: opacity var(--transition);
+            border-radius: var(--border-radius-md);
+        }
+
+        .gallery-item:hover .achievement-overlay {
+            opacity: 1;
+        }
+
+        .achievement-overlay h4 {
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .achievement-overlay p {
+            color: var(--accent);
+            font-size: 0.8rem;
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .achievement-zoom-icon {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(4px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+
+        .gallery-item:hover .achievement-zoom-icon {
+            opacity: 1;
+        }
+
+        /* Category badge */
+        .cat-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            padding: 0.2rem 0.65rem;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--primary);
+            z-index: 2;
+        }
+
+        /* ── Lightbox ── */
+        #lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 9000;
+            background: rgba(20, 30, 50, 0.92);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+        }
+
+        #lightbox.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox-inner {
+            background: var(--bg-white);
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            max-width: 860px;
+            width: 100%;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+            transform: scale(0.88) translateY(20px);
+            transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #lightbox.open .lightbox-inner {
+            transform: scale(1) translateY(0);
+        }
+
+        .lightbox-img-wrap {
+            position: relative;
+            background: #0f1929;
+        }
+
+        .lightbox-img-wrap img {
+            width: 100%;
+            max-height: 480px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.12);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s, transform 0.3s;
+            z-index: 10;
+        }
+
+        .lightbox-close:hover {
+            background: #EF4444;
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .lightbox-caption {
+            padding: 1.5rem 2rem;
+        }
+
+        .lightbox-caption h3 {
+            color: var(--primary);
+            margin-bottom: 0.4rem;
+            font-size: 1.3rem;
+        }
+
+        .lightbox-caption p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(4px);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+            z-index: 10;
+        }
+
+        .lightbox-nav:hover {
+            background: rgba(229, 157, 44, 0.7);
+        }
+
+        .lightbox-nav.prev {
+            left: 1rem;
+        }
+
+        .lightbox-nav.next {
+            right: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stat-number {
+                font-size: 2.2rem;
+            }
+
+            .lightbox-img-wrap img {
+                max-height: 280px;
+            }
+
+            .lightbox-caption {
+                padding: 1rem 1.25rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="images/logo.webp" alt="Pt. L.S.S. Inter College Logo" class="navbar-logo">
+                <div class="logo-text">
+                    <span class="logo-name">Pt. LSS Inter College</span>
+                    <span class="logo-tagline">25 years of Excellence</span>
+                </div>
+            </a>
+
+            <button class="mobile-menu-btn">
+                <i data-lucide="menu" size="24"></i>
+            </button>
+
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="director.html">Director's Profile</a></li>
+                <li><a href="admissions.html">Admissions</a></li>
+                <li><a href="academics.html">Academics</a></li>
+                <li><a href="achievements.html" class="active">Achievements</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero / Banner -->
+    <div class="about-header">
+        <div class="container">
+            <h1 style="font-size: 3rem;">Our Achievements</h1>
+            <p>Celebrating Excellence, One Milestone at a Time.</p>
+        </div>
+    </div>
+
+    <!-- Stats Strip -->
+    <div class="stats-strip">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number" data-target="500" data-suffix="+">0</span>
+                    <span class="stat-label">Awards Won</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="20" data-suffix="+">0</span>
+                    <span class="stat-label">Years of Excellence</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="15" data-suffix="+">0</span>
+                    <span class="stat-label">Inter-School Titles</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="50" data-suffix="+">0</span>
+                    <span class="stat-label">Cultural Events</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gallery Section -->
+    <section class="section" style="background-color: var(--bg-body);">
+        <div class="container">
+            <div class="text-center" style="margin-bottom: 1.5rem;">
+                <h2>Achievement Gallery</h2>
+                <div class="section-divider"></div>
+                <p class="text-muted" style="max-width: 600px; margin: 0 auto;">A proud testament to the dedication,
+                    talent, and spirit of our students and faculty.</p>
+            </div>
+
+            <!-- Filter Buttons — data-category matches script.js logic -->
+            <div class="gallery-filters" style="margin-top: 2.5rem;">
+                <button class="filter-btn active" data-category="All">All</button>
+                <button class="filter-btn" data-category="Academic">Academic</button>
+                <button class="filter-btn" data-category="Cultural">Cultural</button>
+            </div>
+
+            <!-- Gallery Grid — items use .gallery-item so script.js filter works -->
+            <div class="gallery-grid">
+
+                <!-- Academic -->
+                <div class="gallery-item" data-category="Academic" data-title="Project Exhibition"
+                    data-desc="Students presenting their project which achieves the first rank in intra school project Exhibition">
+                    <img src="/images/1st commer project.webp" alt="Commerce project 1st position">
+                    <span class="cat-badge">Academic</span>
+                    <div class="achievement-zoom-icon"><i data-lucide="zoom-in" size="16"></i></div>
+                    <div class="achievement-overlay">
+                        <h4>1st Position in Project Exhibition </h4>
+                        <p>Best Project - Commerce</p>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="Academic" data-title="Project Exhibition"
+                    data-desc="Students presenting their project which achieve the second rank in intra school project Exhibition">
+                    <img src="/images/2nd best commer project.webp" alt="Best banking Project">
+                    <span class="cat-badge">Academic</span>
+                    <div class="achievement-zoom-icon"><i data-lucide="zoom-in" size="16"></i></div>
+                    <div class="achievement-overlay">
+                        <h4>2nd Position in Project Exhibition</h4>
+                        <p>Best Banking Project</p>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="Academic" data-title="Project Exhibition"
+                    data-desc="Students presenting their project which achieve the third rank in intra school project Exhibition">
+                    <img src="/images/e commerce project.webp" alt="Best E-commerce Project">
+                    <span class="cat-badge">Academic</span>
+                    <div class="achievement-zoom-icon"><i data-lucide="zoom-in" size="16"></i></div>
+                    <div class="achievement-overlay">
+                        <h4>3rd Position in Project Exhibition</h4>
+                        <p>Best E-commerce Project</p>
+                    </div>
+                </div>
+
+
+                <!-- Cultural -->
+                <div class="gallery-item" data-category="Cultural" data-title="Cultural Fest Winners"
+                    data-desc="Students presenting their diyas made in the diya making competition.">
+                    <img src="/images/Diya making competition.webp" alt="Cultural Fest Winners">
+                    <span class="cat-badge">Cultural</span>
+                    <div class="achievement-zoom-icon"><i data-lucide="zoom-in" size="16"></i></div>
+                    <div class="achievement-overlay">
+                        <h4>Diya Making Competition</h4>
+                        <p>Kids presenting their Diya</p>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="Cultural" data-title="Art &amp; Craft Exhibition"
+                    data-desc="Rangoli Competition Held in School to give students cultural exposure.">
+                    <img src="/images/rangoli competition.webp" alt="Art and Craft Exhibition">
+                    <span class="cat-badge">Cultural</span>
+                    <div class="achievement-zoom-icon"><i data-lucide="zoom-in" size="16"></i></div>
+                    <div class="achievement-overlay">
+                        <h4>Art &amp; Rangoli Competition</h4>
+                        <p>Students in front of the Rangoli they made.</p>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="Cultural" data-title="Art &amp; Craft Exhibition"
+                    data-desc="Rangoli Competition Held in School to give students cultural exposure.">
+                    <img src="/images/rangoli competition 2.webp" alt="Art and Craft Exhibition">
+                    <span class="cat-badge">Cultural</span>
+                    <div class="achievement-zoom-icon"><i data-lucide="zoom-in" size="16"></i></div>
+                    <div class="achievement-overlay">
+                        <h4>Art &amp; Rangoli Competition</h4>
+                        <p>Students in front of the Rangoli they made.</p>
+                    </div>
+                </div>
+
+                <!-- Other -->
+                <div class="gallery-item" data-category="Other" data-title="Craft Work"
+                    data-desc="Kids doing art and craft to imrpove their creativity and reasoning.">
+                    <img src="/images/craft work of tiny students.webp" alt="Craft Work">
+                    <span class="cat-badge">Other</span>
+                    <div class="achievement-zoom-icon"><i data-lucide="zoom-in" size="16"></i></div>
+                    <div class="achievement-overlay">
+                        <h4>Craft Work by Kids</h4>
+                        <p>Kids doing art and craft</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div id="lightbox" role="dialog" aria-modal="true" aria-label="Achievement detail">
+        <div class="lightbox-inner" id="lightboxInner">
+            <div class="lightbox-img-wrap">
+                <button class="lightbox-nav prev" id="lightboxPrev" aria-label="Previous">
+                    <i data-lucide="chevron-left" size="20"></i>
+                </button>
+                <img id="lightboxImg" src="" alt="">
+                <button class="lightbox-close" id="lightboxClose" aria-label="Close">
+                    <i data-lucide="x" size="18"></i>
+                </button>
+                <button class="lightbox-nav next" id="lightboxNext" aria-label="Next">
+                    <i data-lucide="chevron-right" size="20"></i>
+                </button>
+            </div>
+            <div class="lightbox-caption">
+                <h3 id="lightboxTitle"></h3>
+                <p id="lightboxDesc"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-grid">
+            <div>
+                <h3
+                    style="border-bottom: 2px solid var(--accent); display: inline-block; margin-bottom: 1rem; color: var(--text-white);">
+                    Pt. L.S.S. Inter College</h3>
+                <p style="color:white; margin-bottom: 1rem;">
+                    Providing quality education that shapes confident, disciplined, and future-ready students.
+                </p>
+            </div>
+
+            <div>
+                <h4 style="color: var(--text-white); margin-bottom: 1rem;">Quick Links</h4>
+                <ul style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <li><a href="admissions.html">Admissions</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="academics.html">Academics</a></li>
+                    <li><a href="achievements.html">Achievements</a></li>
+                    <li><a href="director.html">Director's Message</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 style="color: var(--text-white); margin-bottom: 1rem;">Contact Us</h4>
+                <ul style="display: flex; flex-direction: column; gap: 0.8rem;">
+                    <li style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="map-pin" size="18" color="#F59E0B"></i>
+                        <span>607/1 Siddharth Nagar, Gooba Garden, Kalyanpur, Kanpur</span>
+                    </li>
+                    <li style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="phone" size="18" color="#F59E0B"></i>
+                        <span>7236993451, 8840026479</span>
+                    </li>
+                    <li style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="mail" size="18" color="#F59E0B"></i>
+                        <span>ptlssicollege@gmail.com</span>
+                    </li>
+                    <li style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="instagram" size="18" color="#F59E0B"></i>
+                        <a href="https://www.instagram.com/pt.lss_inter_college" target="_blank"
+                            rel="noopener noreferrer">@pt.lss_inter_college</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2025 Pt. Laxmi Shanker Saraswati Inter College. All rights reserved.
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        /* ── Animated Counters ── */
+        function animateCounter(el) {
+            const target = +el.dataset.target;
+            const suffix = el.dataset.suffix || '';
+            const duration = 2000;
+            const step = target / (duration / 16);
+            let current = 0;
+            const timer = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                el.textContent = Math.floor(current).toLocaleString() + suffix;
+            }, 16);
+        }
+
+        const counterEls = document.querySelectorAll('.stat-number[data-target]');
+        const counterObs = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounter(entry.target);
+                    counterObs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+        counterEls.forEach(el => counterObs.observe(el));
+
+        /* ── Lightbox ── */
+        const lightbox = document.getElementById('lightbox');
+        const lbImg = document.getElementById('lightboxImg');
+        const lbTitle = document.getElementById('lightboxTitle');
+        const lbDesc = document.getElementById('lightboxDesc');
+        const lbClose = document.getElementById('lightboxClose');
+        const lbPrev = document.getElementById('lightboxPrev');
+        const lbNext = document.getElementById('lightboxNext');
+
+        // All gallery items on this page
+        const allItems = Array.from(document.querySelectorAll('.gallery-item'));
+        let currentIndex = 0;
+
+        function getVisibleItems() {
+            // Only items currently shown (not hidden by script.js filter)
+            return allItems.filter(i => i.style.display !== 'none');
+        }
+
+        function populateLightbox(item) {
+            lbImg.src = item.querySelector('img').src;
+            lbImg.alt = item.dataset.title || '';
+            lbTitle.textContent = item.dataset.title || '';
+            lbDesc.textContent = item.dataset.desc || '';
+        }
+
+        function openLightbox(item) {
+            const visible = getVisibleItems();
+            currentIndex = visible.indexOf(item);
+            populateLightbox(item);
+            lightbox.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        allItems.forEach(item => {
+            item.addEventListener('click', () => openLightbox(item));
+        });
+
+        lbClose.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) closeLightbox();
+        });
+
+        lbPrev.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const visible = getVisibleItems();
+            currentIndex = (currentIndex - 1 + visible.length) % visible.length;
+            populateLightbox(visible[currentIndex]);
+        });
+
+        lbNext.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const visible = getVisibleItems();
+            currentIndex = (currentIndex + 1) % visible.length;
+            populateLightbox(visible[currentIndex]);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('open')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') lbPrev.click();
+            if (e.key === 'ArrowRight') lbNext.click();
+        });
+    </script>
+</body>
+
+</html>

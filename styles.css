@@ -369,7 +369,8 @@ img {
 
 .nav-links {
   display: flex;
-  gap: 2.5rem;
+  gap: 2.2rem;
+  margin-left: auto;
 }
 
 .nav-links a {
